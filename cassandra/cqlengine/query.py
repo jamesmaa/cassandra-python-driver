@@ -19,6 +19,7 @@ import time
 import six
 from warnings import warn
 
+from cassandra import ProtocolVersion
 from cassandra.query import SimpleStatement
 from cassandra.cqlengine import columns, CQLEngineException, ValidationError, UnicodeMixin
 from cassandra.cqlengine import connection as conn
@@ -1478,8 +1479,8 @@ def _execute_statement(model, statement, consistency_level, timeout, connection=
     if model._partition_key_index:
         key_values = statement.partition_key_values(model._partition_key_index)
         if not any(v is None for v in key_values):
-            parts = model._routing_key_from_values(key_values, conn.get_cluster(connection).protocol_version)
+            parts = model._routing_key_from_values(key_values, ProtocolVersion.V4)
             s.routing_key = parts
             s.keyspace = model._get_keyspace()
     connection = connection or model._get_connection()
-    return conn.execute(s, params, timeout=timeout, connection=connection)
+    return connection.execute(s, params, timeout=timeout)
