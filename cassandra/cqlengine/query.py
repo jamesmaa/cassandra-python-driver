@@ -420,6 +420,8 @@ class AbstractQuerySet(object):
                 clone.__dict__[k] = self._batch
             elif k == '_timeout':
                 clone.__dict__[k] = self._timeout
+            elif k == '_connection':
+                clone.__dict__[k] = self._connection
             else:
                 clone.__dict__[k] = copy.deepcopy(v, memo)
 
