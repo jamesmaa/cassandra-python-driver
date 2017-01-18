@@ -253,7 +253,7 @@ class BatchQuery(object):
 
         query_list.append('APPLY BATCH;')
 
-        tmp = conn.execute('\n'.join(query_list), parameters, self._consistency, self._timeout, connection=self._connection)
+        tmp = self._connection.execute('\n'.join(query_list), parameters, self._timeout)
         check_applied(tmp)
 
         self.queries = []
